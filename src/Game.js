@@ -1,4 +1,5 @@
 import React from 'react'
+import { constants } from './constants'
 
 const gameStyle = {
   fontSize:'20px',
@@ -9,7 +10,7 @@ const gameStyle = {
 
 const Game = () => (
   <div style={gameStyle} >
-    <h2>Tic Tac Toe</h2>
+    <h2>{constants.GAME_TITLE}</h2>
   </div>
 )
 
