@@ -17,11 +17,14 @@ const Board = () => {
   const [activePlayer, setActivePlayer] = useState(constants.PLAYER_X)
   const [gameStatus, setGameStatus] = useState(`${constants.GAME_START}, ${constants.NEXT_PLAYER}: ${constants.PLAYER_X}`)
   
+  const isFilledSquare = (filledSquare, index) => filledSquare[index]
+
   const handleMove = index => {
     const filledSquare = [...squares]
+    if (isFilledSquare(filledSquare, index)) return
+
     filledSquare[index] = activePlayer
     setSquares(filledSquare)
-    
     setGameStatus(`${constants.NEXT_PLAYER}: ${constants.PLAYER_X}`)
   }
 
