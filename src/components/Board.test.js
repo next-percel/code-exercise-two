@@ -18,4 +18,9 @@ describe('Board Component', ()=> {
   it('Should display status as Start game, Next Player: X', () => {
     expect(wrapper.find('div').at(0).text()).toEqual(`${constants.GAME_START}, ${constants.NEXT_PLAYER}: ${constants.PLAYER_X}`)
   })
+
+  it('Should display status as Next Player: O', () => {
+    wrapper.find(Square).at(0).simulate('move')
+    expect(wrapper.find('div').at(0).text()).toEqual(`${constants.NEXT_PLAYER}: ${constants.PLAYER_O}`)
+  })
 })

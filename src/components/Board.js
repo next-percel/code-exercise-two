@@ -19,13 +19,16 @@ const Board = () => {
   
   const isFilledSquare = (filledSquare, index) => filledSquare[index]
 
+  const getNextPayer = () => activePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X
+
   const handleMove = index => {
     const filledSquare = [...squares]
     if (isFilledSquare(filledSquare, index)) return
 
     filledSquare[index] = activePlayer
     setSquares(filledSquare)
-    setGameStatus(`${constants.NEXT_PLAYER}: ${constants.PLAYER_X}`)
+    setActivePlayer(getNextPayer())
+    setGameStatus(`${constants.NEXT_PLAYER}: ${getNextPayer()}`)
   }
 
   return (
