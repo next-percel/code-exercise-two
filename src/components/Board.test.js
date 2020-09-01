@@ -223,4 +223,20 @@ describe('Board Component', ()=> {
       wrapper.find('div').at(0).text()
     ).toEqual(`${constants.GAME_OVER}: ${constants.PLAYER_O} ${constants.GAME_WIN}`)
   })
+
+  it('Should display status as "Game Over: Draw" If all nine squares are filled and neither player has three in a row', () => {
+    const wrapper = shallow(<Board />)
+    wrapper.find(Square).at(0).simulate('move')
+    wrapper.find(Square).at(2).simulate('move')
+    wrapper.find(Square).at(1).simulate('move')
+    wrapper.find(Square).at(3).simulate('move')
+    wrapper.find(Square).at(5).simulate('move')
+    wrapper.find(Square).at(4).simulate('move')
+    wrapper.find(Square).at(6).simulate('move')
+    wrapper.find(Square).at(7).simulate('move')
+    wrapper.find(Square).at(8).simulate('move')
+    expect(
+      wrapper.find('div').at(0).text()
+    ).toEqual(`${constants.GAME_OVER}: ${constants.GAME_DRAW}`)
+  })
 })

@@ -41,6 +41,14 @@ const Board = () => {
     }
     return null
   }
+
+  const isBoardFilled = squares => {
+    const filledSquaresCount = squares.filter(square => square !== null ).length
+    if (filledSquaresCount === 9) {
+      return true;
+    }
+    return false;
+  } 
   
   const isFilledSquare = (filledSquare, index) => filledSquare[index]
 
@@ -50,6 +58,9 @@ const Board = () => {
   const getStatus = () => {
     if (winner) {
       return `${constants.GAME_OVER}: ${winner} ${constants.GAME_WIN}`
+    }
+    else if (isBoardFilled(squares)) {
+      return `${constants.GAME_OVER}: ${constants.GAME_DRAW}`
     }
     else {
       return gameStatus
