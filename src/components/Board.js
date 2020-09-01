@@ -16,24 +16,42 @@ const Board = () => {
   const [squares, setSquares] = useState(emptyBoard)
   const [activePlayer, setActivePlayer] = useState(constants.PLAYER_X)
   const [gameStatus, setGameStatus] = useState(`${constants.GAME_START}, ${constants.NEXT_PLAYER}: ${constants.PLAYER_X}`)
+
+  const getWinner = squares => {
+    if (squares[0] && squares[0] === squares[1] && squares[0] === squares[2]) {
+      return squares[0]
+    }
+    return null
+  }
   
   const isFilledSquare = (filledSquare, index) => filledSquare[index]
 
   const getNextPayer = () => activePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X
 
+  const winner = getWinner(squares)
+  const getStatus = () => {
+    if (winner) {
+      return `${constants.GAME_OVER}: ${winner} ${constants.GAME_WIN}`
+    }
+    else {
+      return gameStatus
+    }
+  }
+
   const handleMove = index => {
     const filledSquare = [...squares]
-    if (isFilledSquare(filledSquare, index)) return
+    setGameStatus(winner)
+    if (winner || isFilledSquare(filledSquare, index)) return
 
-    filledSquare[index] = activePlayer
+    filledSquare[index] = activePlayer    
     setSquares(filledSquare)
-    setActivePlayer(getNextPayer())
+    setActivePlayer(getNextPayer())    
     setGameStatus(`${constants.NEXT_PLAYER}: ${getNextPayer()}`)
   }
 
   return (
     <>
-      <div>{gameStatus}</div>
+      <div>{getStatus()}</div>
       <div style={boardStyle}>
         {squares.map((square, index) => (
           <Square key={index} position={square} onMove={() => handleMove(index)} />
