@@ -198,4 +198,29 @@ describe('Board Component', ()=> {
       wrapper.find('div').at(0).text()
     ).toEqual(`${constants.GAME_OVER}: ${constants.PLAYER_O} ${constants.GAME_WIN}`)
   })
+
+  it('Should display status as "Game Over: X win" if player X fill three squares in second diagonal (top-right to bottom-left)', () => {
+    const wrapper = shallow(<Board />)
+    wrapper.find(Square).at(2).simulate('move')
+    wrapper.find(Square).at(5).simulate('move')
+    wrapper.find(Square).at(4).simulate('move')
+    wrapper.find(Square).at(7).simulate('move')
+    wrapper.find(Square).at(6).simulate('move')
+    expect(
+      wrapper.find('div').at(0).text()
+    ).toEqual(`${constants.GAME_OVER}: ${constants.PLAYER_X} ${constants.GAME_WIN}`)
+  })
+
+  it('Should display status as "Game Over: O win" if player O fill three squares in second diagonal (top-right to bottom-left)', () => {
+    const wrapper = shallow(<Board />)
+    wrapper.find(Square).at(1).simulate('move')
+    wrapper.find(Square).at(2).simulate('move')
+    wrapper.find(Square).at(0).simulate('move')
+    wrapper.find(Square).at(4).simulate('move')
+    wrapper.find(Square).at(3).simulate('move')
+    wrapper.find(Square).at(6).simulate('move')
+    expect(
+      wrapper.find('div').at(0).text()
+    ).toEqual(`${constants.GAME_OVER}: ${constants.PLAYER_O} ${constants.GAME_WIN}`)
+  })
 })
