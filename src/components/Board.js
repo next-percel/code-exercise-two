@@ -30,6 +30,9 @@ const Board = () => {
     if (squares[0] && squares[0] === squares[3] && squares[0] === squares[6]) {
       return squares[0]
     }
+    if (squares[1] && squares[1] === squares[4] && squares[1] === squares[7]) {
+      return squares[1]
+    }
     return null
   }
   
