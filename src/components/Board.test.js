@@ -239,4 +239,12 @@ describe('Board Component', ()=> {
       wrapper.find('div').at(0).text()
     ).toEqual(`${constants.GAME_OVER}: ${constants.GAME_DRAW}`)
   })
+
+  it('Should display status as "Game Over: Draw" If all nine squares are filled and neither player has three in a row', () => {
+    const wrapper = shallow(<Board />)
+    wrapper.find('button').simulate('click')
+    expect(
+      wrapper.find('div').at(0).text()
+    ).toEqual(`${constants.GAME_START}, ${constants.NEXT_PLAYER}: ${constants.PLAYER_X}`)
+  })
 })
