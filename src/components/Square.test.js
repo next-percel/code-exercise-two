@@ -4,11 +4,11 @@ import Square from './Square'
 import { constants } from '../constants'
 
 const onMove = jest.fn()
-const props = {position: constants.PLAYER_X, onMove }
+const props = {move: constants.PLAYER_X, onMove }
 describe('Square Component', ()=> {
   const wrapper = shallow(<Square {...props} />)
 
-  it('Should render default player', () => {
+  it('should render player move', () => {
     expect(wrapper.find('button').text()).toEqual(constants.PLAYER_X);
   })   
 

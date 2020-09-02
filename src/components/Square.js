@@ -6,9 +6,9 @@ import React from 'react'
    outline: 'none'
  }
 
- const Square = ({ position, onMove }) => (
+ const Square = ({ move, onMove }) => (
    <button style={squareStyle} onClick={onMove}>
-     {position}
+     {move}
    </button>
  )
 

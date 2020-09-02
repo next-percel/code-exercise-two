@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Square from './Square'
 import { constants } from '../constants'
+import { getWinner, isBoardFilled } from './gameScore'
 
 const boardStyle = {
   border: '4px solid',
@@ -20,85 +21,46 @@ const buttonStyle = {
 const Board = () => {
   const emptyBoard = Array(constants.TOTAL_SQUARES).fill(null);
   const firstPlayer = constants.PLAYER_X
-  const initialGameStatus = `${constants.GAME_START}, ${constants.NEXT_PLAYER}: ${constants.PLAYER_X}`
   
   const [squares, setSquares] = useState(emptyBoard)
   const [activePlayer, setActivePlayer] = useState(firstPlayer)
-  const [gameStatus, setGameStatus] = useState(initialGameStatus)
-
-  const getWinner = squares => {
-    const winPositions = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6]
-    ];
-    for (let winPosition = 0; winPosition < winPositions.length; winPosition++) {
-      const [position1, position2, position3] = winPositions[winPosition];
-      
-      const firstPositionFilled = squares[position1]
-      const matchWithSecondPosition = squares[position1] === squares[position2]
-      const matchWithThirdPosition = squares[position1] === squares[position3]
-      
-      if (firstPositionFilled && matchWithSecondPosition && matchWithThirdPosition) {
-        return firstPositionFilled;
-      }
-    }
-    return null
-  }
-
-  const isBoardFilled = squares => {
-    const filledSquaresCount = squares.filter(square => square !== null ).length
-    if (filledSquaresCount === 9) {
-      return true;
-    }
-    return false;
-  } 
   
-  const isFilledSquare = (filledSquare, index) => filledSquare[index]
+  const isFilledSquare = (filledSquare, position) => !!filledSquare[position]
 
   const getNextPayer = () => activePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X
 
   const winner = getWinner(squares)
-  const getStatus = () => {
+
+  const getGameStatus = () => {
     if (winner) {
-      return `${constants.GAME_OVER}: ${winner} ${constants.GAME_WIN}`
+      return `${winner} ${constants.GAME_WIN}`
     }
-    else if (isBoardFilled(squares)) {
-      return `${constants.GAME_OVER}: ${constants.GAME_DRAW}`
+    if (isBoardFilled(squares)) {
+      return `${constants.GAME_DRAW}`
     }
-    else {
-      return gameStatus
-    }
+    return `${constants.CURRENT_PLAYER}: ${activePlayer}`
   }
 
-  const handleMove = index => {
+  const handleMove = position => {
     const filledSquare = [...squares]
-    setGameStatus(winner)
-    if (winner || isFilledSquare(filledSquare, index)) return
+    if (winner || isFilledSquare(filledSquare, position)) return
 
-    filledSquare[index] = activePlayer    
+    filledSquare[position] = activePlayer    
     setSquares(filledSquare)
     setActivePlayer(getNextPayer())    
-    setGameStatus(`${constants.NEXT_PLAYER}: ${getNextPayer()}`)
   }
 
   const resetBoard = () => {
     setSquares(emptyBoard)
     setActivePlayer(firstPlayer)
-    setGameStatus(initialGameStatus)
   }
 
   return (
     <>
-      <div>{getStatus()}</div>
+      <div>{getGameStatus()}</div>
       <div style={boardStyle}>
-        {squares.map((square, index) => (
-          <Square key={index} position={square} onMove={() => handleMove(index)} />
+        {squares.map((square, position) => (
+          <Square key={position} move={square} onMove={() => handleMove(position)} />
         ))}
       </div>
       <button style={buttonStyle} onClick={resetBoard}>{constants.GAME_RESTART}</button> 
