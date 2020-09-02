@@ -1,16 +1,33 @@
-import React from 'react';
+import React from 'react'
 import { shallow } from 'enzyme'
 import Board from './Board'
 import Square from './Square'
 import { constants } from '../constants'
 
 const getWrapper = () => {
-  return shallow(<Board />);
+  return shallow(<Board />)
 } 
+
+const playerX = {
+  move: (position, wrapper) => {
+    wrapper.find(Square).at(position).simulate('move')
+  }
+}
+
+const playerO = {
+  move: (position, wrapper) => {
+    wrapper.find(Square).at(position).simulate('move')
+  }
+}
 
 const simulateMove = (wrapper, positions) => {
   for (let position=0;position<positions.length;position++) {
-    wrapper.find(Square).at(positions[position]).simulate('move')
+    if (position % 2) {
+      playerO.move(positions[position], wrapper)
+    }
+    else {
+      playerX.move(positions[position], wrapper)
+    }
   }  
 }
 
@@ -33,11 +50,19 @@ describe('Board Component', ()=> {
     expect(wrapper.find('div').at(0).text()).toEqual(INITIAL_STATUS)
   })
 
+  it('Should render same move if player click twice on the same square', () => {
+    const wrapper = getWrapper()
+    playerX.move(0, wrapper)
+    expect(wrapper.find(Square).at(0).prop('move')).toEqual(constants.PLAYER_X)
+    playerX.move(0, wrapper)
+    expect(wrapper.find(Square).at(0).prop('move')).toEqual(constants.PLAYER_X)
+  })
+
   it('Should render player move in sqaure if user click on it', () => {
     const wrapper = getWrapper()
-    wrapper.find(Square).at(0).simulate('move')
+    playerX.move(0, wrapper)
     expect(wrapper.find(Square).at(0).prop('move')).toEqual(constants.PLAYER_X)
-    wrapper.find(Square).at(1).simulate('move')
+    playerO.move(1, wrapper)
     expect(wrapper.find(Square).at(1).prop('move')).toEqual(constants.PLAYER_O)
   })
 

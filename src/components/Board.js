@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Square from './Square'
 import { constants } from '../constants'
-import { getWinner, isBoardFilled } from './gameScore'
+import { isWon, isDraw } from '../utils/gameStatus'
 
 const boardStyle = {
   border: '4px solid',
@@ -19,40 +19,45 @@ const buttonStyle = {
 }
 
 const Board = () => {
-  const emptyBoard = Array(constants.TOTAL_SQUARES).fill(null);
+  const emptyBoard = Array(constants.TOTAL_SQUARES).fill(null)
   const firstPlayer = constants.PLAYER_X
-  
   const [squares, setSquares] = useState(emptyBoard)
   const [activePlayer, setActivePlayer] = useState(firstPlayer)
+  const isGameWon = isWon(squares)
+
+  const isFilledSquare = (squares, position) => !!squares[position]
+
+  const togglePlayer = activePlayer => activePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X
+
+  const registerMove = (filledSquare, position) => filledSquare[position] = activePlayer    
   
-  const isFilledSquare = (filledSquare, position) => !!filledSquare[position]
-
-  const getNextPayer = () => activePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X
-
-  const winner = getWinner(squares)
-
-  const getGameStatus = () => {
-    if (winner) {
-      return `${winner} ${constants.GAME_WIN}`
-    }
-    if (isBoardFilled(squares)) {
-      return `${constants.GAME_DRAW}`
-    }
-    return `${constants.CURRENT_PLAYER}: ${activePlayer}`
+  const updateBoard = filledSquare => {
+    setSquares(filledSquare)
+    setActivePlayer(prevActivePlayer => prevActivePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X)    
   }
 
   const handleMove = position => {
     const filledSquare = [...squares]
-    if (winner || isFilledSquare(filledSquare, position)) return
+    if (isGameWon || isFilledSquare(squares, position)) return
 
-    filledSquare[position] = activePlayer    
-    setSquares(filledSquare)
-    setActivePlayer(getNextPayer())    
+    registerMove(filledSquare, position)
+    updateBoard(filledSquare)
   }
 
   const resetBoard = () => {
     setSquares(emptyBoard)
     setActivePlayer(firstPlayer)
+  }
+  
+  const getGameStatus = () => {
+    const winner = togglePlayer(activePlayer)
+    if (isGameWon) {
+      return `${winner} ${constants.GAME_WIN}`
+    }
+    if (isDraw(isGameWon, squares)) {
+      return `${constants.GAME_DRAW}`
+    }
+    return `${constants.CURRENT_PLAYER}: ${activePlayer}`
   }
 
   return (

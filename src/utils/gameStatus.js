@@ -1,4 +1,5 @@
-export const getWinner = squares => {
+import { constants } from '../constants'
+export const isWon = squares => {
   const winCombinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -8,7 +9,7 @@ export const getWinner = squares => {
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6]
-  ];
+  ]
   for (let winCombination = 0; winCombination < winCombinations.length; winCombination++) {
     const [position1, position2, position3] = winCombinations[winCombination];
     
@@ -17,13 +18,13 @@ export const getWinner = squares => {
     const matchWithThirdPosition = squares[position1] === squares[position3]
     
     if (firstPositionFilled && matchWithSecondPosition && matchWithThirdPosition) {
-      return firstPositionFilled;
+      return true
     }
   }
-  return null
+  return false
 }
 
-export const isBoardFilled = squares => {
+export const isDraw = (winner, squares) => {
   const filledSquaresCount = squares.filter(square => square !== null ).length
-  return filledSquaresCount === 9
+  return !winner && filledSquaresCount === constants.TOTAL_SQUARES
 } 

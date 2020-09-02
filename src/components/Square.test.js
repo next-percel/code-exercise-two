@@ -9,7 +9,7 @@ describe('Square Component', ()=> {
   const wrapper = shallow(<Square {...props} />)
 
   it('should render player move', () => {
-    expect(wrapper.find('button').text()).toEqual(constants.PLAYER_X);
+    expect(wrapper.find('button').text()).toEqual(constants.PLAYER_X)
   })   
 
   it('should call onMove when click on Square', () => {
