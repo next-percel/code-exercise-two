@@ -1,4 +1,5 @@
 import { constants } from '../constants'
+
 export const isWon = squares => {
   const winCombinations = [
     [0, 1, 2],

@@ -23,25 +23,33 @@ const Board = () => {
   const firstPlayer = constants.PLAYER_X
   const [squares, setSquares] = useState(emptyBoard)
   const [activePlayer, setActivePlayer] = useState(firstPlayer)
+  const [winner, setWinner] = useState(null)
   const isGameWon = isWon(squares)
-
+  
   const isFilledSquare = (squares, position) => !!squares[position]
 
-  const togglePlayer = activePlayer => activePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X
+  const getGameStatus = () => {
+    if (isGameWon) {
+      return `${winner} ${constants.GAME_WIN}`
+    }
+    if (isDraw(isGameWon, squares)) {
+      return `${constants.GAME_DRAW}: ${activePlayer}`
+    }
+    return `${constants.CURRENT_PLAYER}: ${activePlayer}`
+  }
 
-  const registerMove = (filledSquare, position) => filledSquare[position] = activePlayer    
-  
-  const updateBoard = filledSquare => {
+  const registerMove = (position) => {
+    const filledSquare = [...squares]
+    filledSquare[position] = activePlayer    
     setSquares(filledSquare)
-    setActivePlayer(prevActivePlayer => prevActivePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X)    
   }
 
   const handleMove = position => {
-    const filledSquare = [...squares]
     if (isGameWon || isFilledSquare(squares, position)) return
 
-    registerMove(filledSquare, position)
-    updateBoard(filledSquare)
+    registerMove(position)
+    setWinner(activePlayer)
+    setActivePlayer(prevActivePlayer => prevActivePlayer === constants.PLAYER_X ? constants.PLAYER_O : constants.PLAYER_X)    
   }
 
   const resetBoard = () => {
@@ -49,17 +57,6 @@ const Board = () => {
     setActivePlayer(firstPlayer)
   }
   
-  const getGameStatus = () => {
-    const winner = togglePlayer(activePlayer)
-    if (isGameWon) {
-      return `${winner} ${constants.GAME_WIN}`
-    }
-    if (isDraw(isGameWon, squares)) {
-      return `${constants.GAME_DRAW}`
-    }
-    return `${constants.CURRENT_PLAYER}: ${activePlayer}`
-  }
-
   return (
     <>
       <div>{getGameStatus()}</div>
